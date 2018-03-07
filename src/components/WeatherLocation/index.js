@@ -1,20 +1,22 @@
 import React, { Component } from 'react';//se modifica si hay un constructor import React from 'react';
+import PropTypes from 'prop-types';
+import CircularProgress from 'material-ui/CircularProgress';
 import Location from './Location';
 import WeatherData from './WeatherData';
+import transformWeather from './../../services/transformWeather';
 import './styles.css';
-import {CLOUD, CLOUDY, SUN, RAIN, SNOW, WINDY} from './../../constant/weathers';
 
 //creando const para llamar api
 const api_key = '32f4d92a2030fc42f873f259012da074';
-const location = 'Santiago,scl';
-const api_weather = `http://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${api_key}&units=metric`;
+//const location = 'Santiago,scl';
+const url = 'https://api.openweathermap.org/data/2.5/weather';
 
 /*const data = {
   temperature:20,
   weatherState: SUN,
   humidity: 10,
   wind: '10m/s',
-}*/
+}
 const data1 = {
   temperature:20,
   weatherState: SUN,
@@ -26,20 +28,23 @@ const data2 = {
   weatherState: SNOW,
   humidity: 5,
   wind: '100m/s',
-}
+}*/
 
 
 //para crear un constructor se usa la palabra class
 //component se agrega 'extends Component' para los componentes de tipo class
 //render() redibuja cosas
 class WeatherLocation extends Component {
-  constructor () {
+  constructor({city}) {
     super();
     this.state = {
-      city: 'Santiago',
-      data: data1
+      city,
+      data: null
     }
+    console.log('constructor');
   }
+  //esto se va al archivo transformWeather
+  /*
   getWeatherState = weather => {
     return WINDY;
   }
@@ -57,8 +62,12 @@ class WeatherLocation extends Component {
     }
     return data;
   }
+  */
+  //reemplazamos handlerUpdateClick por nuestro componente componentWillMount
 
-  handleUpdateClick = () => {
+  componentWillMount = () => {
+    const {city} = this.state;
+    const api_weather = `${url}?q=${city}&appid=${api_key}&units=metric`;
     //no necesitamos este this state porque llamaremos a la api
     /*this.setState({
       data: data2
@@ -67,30 +76,35 @@ class WeatherLocation extends Component {
       console.log(data);
       return data.json();
     }).then(weather_data => {
-      const data = this.getData(weather_data);//se crea para llamar los datos que yo quiero
+      const data = transformWeather(weather_data);//se crea para llamar los datos que yo quiero
       this.setState({data})
       console.log(weather_data);
     })
-    console.log('actualizado')
   }
   render = () => {
     //se puede crear la constante para optimizar el codigo
+    const {onWeatherLocationClick} = this.props;
+    console.log('render');
     const {city, data} = this.state
     return(
-      <div className="weatherLocation">
-        <Location city={city /*this.state.city*/}/>
-        <WeatherData data={ data /*this.state.data*/ } />
-        <button onClick={this.handleUpdateClick}>Actualizar</button>
+      <div className="weatherLocation" onClick={onWeatherLocationClick}>
+        <Location city = {city}/>
+        {data ? <WeatherData data = {data} /> : <CircularProgress size={60} thinckness={7}/>}
       </div>
-    )
+    );
   }
 }
-
+// ? = null
 /* componente funcional
     <div className="weatherLocation">
       <Location city={'Santiago!!'}/>
       <WeatherData />
     </div>
   );*/
+
+WeatherLocation.propTypes = {
+  city: PropTypes.string.isRequired,
+  onWeatherLocationClick: PropTypes.func,
+}
 
 export default WeatherLocation;
