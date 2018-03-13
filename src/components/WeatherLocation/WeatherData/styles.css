@@ -1,3 +1,13 @@
 .weatherDataCont {
   background-color: teal;
+  width: 50vh;
+  display: inline-block;
+}
+.icons {
+  color: lightgreen;
+}
+.extended,
+.extend,
+.nocity {
+  color: #888;
 }

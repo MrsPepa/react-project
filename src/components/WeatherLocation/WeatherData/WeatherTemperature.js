@@ -28,7 +28,7 @@ const StateToIconName = (weatherState) => {
 
 const getWeatherIcon = (weatherState) => {
   return (
-    <WeatherIcons name={StateToIconName(weatherState)} size="2x" />
+    <WeatherIcons className='icons' name={StateToIconName(weatherState)} size="2x" />
   )
   /*switch (weatherState) {
     case 'day-sunny':

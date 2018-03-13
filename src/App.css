@@ -26,3 +26,7 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+.detail {
+  background-color: #d7fffb;
+  height: 165vh;
+}
